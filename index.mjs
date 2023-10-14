@@ -6,13 +6,13 @@ const git = simpleGit();
 
 const curriculumDir = '/Users/epicodus/curriculum';
 const repos = [
-  'code-reviews',
   'pre-work-full-stack',
   'intro-full-stack',
   'javascript-full-stack',
   'react-full-stack',
   'c-sharp-full-stack',
   'career-services-full-stack',
+  'code-reviews',
   'shared-full-stack',
   'DEI-full-stack',
   'capstone',
@@ -30,14 +30,17 @@ const traverseDir = async (dir) => {
       await traverseDir(fullPath);
     } else if (stat.isFile() && extname(file) === '.md') {
       const content = await fs.readFile(fullPath, 'utf8');
-      const urls = content.match(/https:\/\/(?:new\.|www\.)?learnhowtoprogram\.com\/[^\s'"\)]+/g);
+      const matches = content.match(/\(http[^\)]+\)\)?/g);
+      const urls = matches?.map(url => url.slice(1, -1))
       if (urls) {
-        for (const url of urls) {
-          // console.log(`${fullPath}:  ${url}`); // log *all* links to lhtp
+        for (let url of urls) {
+          url = url.includes(")") && !url.includes("(") ? url.slice(0, -1) : url;
           try {
             await axios.get(url);
           } catch (error) {
-            console.log(`${fullPath}:  ${url}`);
+            if (error?.response?.status !== 403) {
+              console.log(`${fullPath}:  ${url} - ${error}`);
+            }
           }
         }
       }
