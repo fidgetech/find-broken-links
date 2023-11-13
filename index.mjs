@@ -36,7 +36,7 @@ const traverseDir = async (dir) => {
         for (let url of urls) {
           url = url.includes(")") && !url.includes("(") ? url.slice(0, -1) : url;
           try {
-            await axios.get(url);
+            await axios.get(url, { timeout: 10000 });
           } catch (error) {
             if (error?.response?.status !== 403) {
               console.log(`${fullPath}:  ${url} - ${error}`);
