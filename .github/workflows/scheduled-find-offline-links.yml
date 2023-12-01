@@ -1,7 +1,9 @@
-name: Manually find offline LHTP links and images
+# runs 12pm UTC Mon-Thu (early morning PT)
+name: Scheduled find offline LHTP links and images
 
 on:
-  workflow_dispatch:
+  schedule:
+    - cron: '0 12 * * 1-4'
 
 jobs:
   fetch-data:
