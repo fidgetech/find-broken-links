@@ -15,7 +15,7 @@ export async function sendEmailWithAttachment(filePath) {
     from: process.env.FROM,
     to: process.env.TO,
     cc: process.env.CC,
-    subject: 'Offline links/images',
+    subject: 'Fidgetech offline links/images',
     text: 'See attached file for a best guess list of broken links and images.',
     attachments: [{path: filePath}]
   };

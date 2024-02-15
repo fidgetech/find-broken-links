@@ -20,16 +20,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Set up SSH for Git operations
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.CODE_REVIEWS_REPO_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
+      - name: Generate GitHub App token
+        uses: peaceiris/actions-github-app-token@v1
+        id: github-app-token
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          installation_id: ${{ secrets.INSTALLATION_ID }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
 
       - name: Run script
         run: npm run start
         env:
+          GITHUB_APP_TOKEN: ${{ steps.github-app-token.outputs.token }}
           NODE_ENV: 'production'
           ORG: ${{ secrets.ORG }}
           SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}

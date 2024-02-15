@@ -5,7 +5,7 @@ import { promises as fs } from 'fs';
 import { join, extname } from 'path';
 import { sendEmailWithAttachment } from './nodemailer.js';
 const git = simpleGit();
-const logFile = 'broken-links.txt';
+const logFile = 'fidgetech-broken-links.txt';
 const org = process.env.ORG;
 
 const repos = [
