@@ -31,6 +31,7 @@ jobs:
         run: npm run start
         env:
           NODE_ENV: 'production'
+          ORG: ${{ secrets.ORG }}
           SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
           FROM: ${{ secrets.FROM }}
           TO: ${{ secrets.TO }}

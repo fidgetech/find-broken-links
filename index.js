@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { default as axios } from 'axios';
 import simpleGit from 'simple-git';
 import { promises as fs } from 'fs';
@@ -5,19 +6,20 @@ import { join, extname } from 'path';
 import { sendEmailWithAttachment } from './nodemailer.js';
 const git = simpleGit();
 const logFile = 'broken-links.txt';
+const org = process.env.ORG;
 
 const repos = [
-  'pre-work-full-stack',
-  'intro-full-stack',
-  'javascript-full-stack',
-  'react-full-stack',
-  'c-sharp-full-stack',
-  'career-services-full-stack',
-  'shared-full-stack',
-  'DEI-full-stack',
+  'pre-work',
+  'introduction-to-programming',
+  'intermediate-javascript',
+  'react',
+  'c-and-net',
   'capstone',
+  'career-services',
+  'shared',
+  'dei',
   'workshops',
-  'code-reviews'
+  'independent-projects'
 ]
 
 const logToFile = async (message) => {
@@ -70,7 +72,10 @@ await fs.rm(logFile, { force: true });
 for (const repo of repos) {
   logToFile(`\n${repo.toUpperCase()}...`);
   const repoPath = join('tmp', repo);
-  const url = process.env.NODE_ENV === 'production' ? `git@github.com:epicodus-curriculum/${repo}.git` : `https://github.com/epicodus-curriculum/${repo}`
+  const url = process.env.NODE_ENV === 'production' ?
+    `https://x-access-token:${process.env.GITHUB_APP_TOKEN}@github.com/${org}/${repo}.git`
+    :
+    `https://github.com/${org}/${repo}`
   await git.clone(url, repoPath);
   await traverseDir(repoPath);
   logToFile('');
